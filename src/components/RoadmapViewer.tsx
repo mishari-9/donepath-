@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useCallback } from "react";
-import ReactFlow, { Background, Controls, MiniMap, ConnectionMode, useNodesState, useEdgesState } from "reactflow";
+import ReactFlow, { Background, Controls, MiniMap, ConnectionMode, useNodesState, useEdgesState, Node } from "reactflow";
 import { SkillNode } from "./SkillNode";
 import { useStore } from "@/store/useStore";
 
@@ -28,7 +28,7 @@ export function RoadmapViewer() {
   }, [edges, setEdges]);
 
   const onNodeClick = useCallback(
-    (_: React.MouseEvent, node: any) => {
+    (_: React.MouseEvent, node: Node) => {
       setActiveNode(node.id);
     },
     [setActiveNode]

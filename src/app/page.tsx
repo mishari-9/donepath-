@@ -1,15 +1,68 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { BookOpen, Trophy, Flame, Code, Shield, Network, Terminal } from "lucide-react";
+import { BookOpen, Trophy, Flame, Code, Shield, Network, Terminal, Target, Edit3, CheckCircle2 } from "lucide-react";
 import { useStore } from "@/store/useStore";
+import { useState, useEffect } from "react";
 
 export default function Dashboard() {
   const { getCompletionPercentage } = useStore();
+  const [goal, setGoal] = useState("Complete C++ Mastery Roadmap by next month");
+  const [isEditingGoal, setIsEditingGoal] = useState(false);
+  const [tempGoal, setTempGoal] = useState(goal);
+
+  // Load goal from local storage
+  useEffect(() => {
+    const savedGoal = localStorage.getItem("donepath_user_goal");
+    if (savedGoal) {
+      setGoal(savedGoal);
+      setTempGoal(savedGoal);
+    }
+  }, []);
+
+  const saveGoal = () => {
+    setGoal(tempGoal);
+    localStorage.setItem("donepath_user_goal", tempGoal);
+    setIsEditingGoal(false);
+  };
 
   return (
-    <div className="max-w-6xl mx-auto p-6 md:p-12 space-y-16">
+    <div className="max-w-6xl mx-auto p-6 md:p-12 space-y-12">
+      {/* User Goal Section */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-900 dark:to-indigo-900 rounded-3xl p-6 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-4"
+      >
+        <div className="flex items-center gap-4 w-full">
+          <div className="p-3 bg-white/20 rounded-2xl backdrop-blur-sm">
+            <Target className="w-8 h-8 text-white" />
+          </div>
+          <div className="flex-1">
+            <h2 className="text-sm font-semibold text-blue-100 uppercase tracking-wider mb-1">Your Primary Goal</h2>
+            {isEditingGoal ? (
+              <div className="flex items-center gap-2">
+                <input 
+                  type="text" 
+                  value={tempGoal} 
+                  onChange={(e) => setTempGoal(e.target.value)}
+                  className="bg-white/10 border border-white/30 text-white rounded-lg px-3 py-1 w-full max-w-md focus:outline-none focus:ring-2 focus:ring-white/50"
+                  autoFocus
+                  onKeyDown={(e) => e.key === 'Enter' && saveGoal()}
+                />
+                <button onClick={saveGoal} className="p-1 hover:bg-white/20 rounded-md transition-colors"><CheckCircle2 className="w-5 h-5 text-green-300" /></button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3">
+                <p className="text-xl md:text-2xl font-bold">{goal}</p>
+                <button onClick={() => setIsEditingGoal(true)} className="p-1 hover:bg-white/20 rounded-md transition-colors"><Edit3 className="w-4 h-4 text-blue-200" /></button>
+              </div>
+            )}
+          </div>
+        </div>
+      </motion.div>
       {/* Header Section */}
       <motion.header 
         initial={{ opacity: 0, y: 20 }}

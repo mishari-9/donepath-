@@ -17,14 +17,16 @@ export function PomodoroTimer() {
       }, 1000);
     } else if (timeLeft === 0) {
       // Switch mode automatically
-      if (mode === "Work") {
-        setMode("Break");
-        setTimeLeft(5 * 60);
-      } else {
-        setMode("Work");
-        setTimeLeft(25 * 60);
-      }
-      setIsActive(false);
+      setTimeout(() => {
+        if (mode === "Work") {
+          setMode("Break");
+          setTimeLeft(5 * 60);
+        } else {
+          setMode("Work");
+          setTimeLeft(25 * 60);
+        }
+        setIsActive(false);
+      }, 0);
     }
     return () => clearInterval(interval);
   }, [isActive, timeLeft, mode]);
