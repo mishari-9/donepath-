@@ -2,12 +2,11 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Eye, EyeOff, Lock, KeyRound, Bot, Github, Mail } from "lucide-react";
+import { Eye, EyeOff, Lock, KeyRound, Bot, Github, UserCircle } from "lucide-react";
 import Link from "next/link";
 import { Route } from "lucide-react";
 
-export function SentientPasswordField() {
-  const [password, setPassword] = useState("");
+export function SentientPasswordField({ password, setPassword }: { password: string, setPassword: (val: string) => void }) {
   const [showPassword, setShowPassword] = useState(false);
 
   // Calculate password strength (0-3)
@@ -122,15 +121,26 @@ export function SentientPasswordField() {
 }
 
 export default function LoginPage() {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
     setIsSubmitting(true);
-    // Simulate login for now
+
+    // Validate hardcoded credentials
     setTimeout(() => {
-      window.location.href = "/";
-    }, 1000);
+      if (username === "a1" && password === "123") {
+        document.cookie = "auth_token=true; path=/";
+        window.location.href = "/";
+      } else {
+        setError("Invalid username or password");
+        setIsSubmitting(false);
+      }
+    }, 800); // Small delay to show the signing in state
   };
 
   return (
@@ -153,22 +163,34 @@ export default function LoginPage() {
         </div>
 
         <div className="glass-panel p-8 rounded-3xl shadow-xl border border-border/50 bg-white/70 dark:bg-zinc-900/70 backdrop-blur-xl">
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-6 p-3 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-xl text-red-600 dark:text-red-400 text-sm font-semibold text-center"
+            >
+              {error}
+            </motion.div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-4">
               <div>
                 <label className="text-sm font-semibold text-foreground flex items-center gap-2 mb-2">
-                  <Mail className="w-4 h-4" />
-                  Email Address
+                  <UserCircle className="w-4 h-4" />
+                  Username
                 </label>
                 <input
-                  type="email"
+                  type="text"
                   required
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   className="block w-full px-4 py-3 rounded-xl bg-white/5 dark:bg-zinc-900/50 text-foreground border border-border placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                  placeholder="student@example.com"
+                  placeholder="Enter your username"
                 />
               </div>
 
-              <SentientPasswordField />
+              <SentientPasswordField password={password} setPassword={setPassword} />
             </div>
 
             <button

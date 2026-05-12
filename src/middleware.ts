@@ -13,11 +13,8 @@ export async function middleware(request: NextRequest) {
   const isProtectedRoute = pathname === '/' || pathname.startsWith('/roadmap');
   const isLoginPage = pathname === '/login';
 
-  // For demonstration purposes, we will not force redirect right now 
-  // so you can still view the app without logging in.
-  // To enforce auth, uncomment the logic below:
-  /*
-  const hasAuthToken = request.cookies.has('sb-access-token'); // Or your custom auth cookie
+  // For demonstration purposes, we are checking for 'auth_token' cookie.
+  const hasAuthToken = request.cookies.has('auth_token');
   
   if (isProtectedRoute && !hasAuthToken) {
     return NextResponse.redirect(new URL('/login', request.url));
@@ -26,7 +23,6 @@ export async function middleware(request: NextRequest) {
   if (isLoginPage && hasAuthToken) {
     return NextResponse.redirect(new URL('/', request.url));
   }
-  */
 
   return NextResponse.next();
 }
