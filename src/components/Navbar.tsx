@@ -22,9 +22,6 @@ export function Navbar() {
       </Link>
       
       <div className="flex items-center gap-6">
-        <Link href="/requirements" className="text-sm font-semibold text-muted-foreground hover:text-primary transition-colors">
-          Project Requirements
-        </Link>
         {mounted && (
           <button
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
