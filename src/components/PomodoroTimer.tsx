@@ -31,6 +31,20 @@ export function PomodoroTimer() {
     return () => clearInterval(interval);
   }, [isActive, timeLeft, mode]);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ignore if user is typing in an input field
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      
+      if (e.key === 'p' || e.key === 'P') {
+        setIsActive(prev => !prev);
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   const toggleTimer = () => setIsActive(!isActive);
 
   const resetTimer = () => {
